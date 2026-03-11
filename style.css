@@ -1,8 +1,8 @@
 body{
-font-family: Arial;
-text-align: center;
+font-family:Arial;
 background:#0b5d2a;
 color:white;
+text-align:center;
 }
 
 button{
@@ -11,7 +11,7 @@ padding:10px;
 font-size:16px;
 }
 
-#dealerCards,#playerCards{
-margin:10px;
+.cards{
 font-size:22px;
+margin:10px;
 }
