@@ -10,7 +10,9 @@ document.getElementById("points").innerText="Points: "+points
 }
 
 function deckBuild(){
+
 deck=[]
+
 let suits=["♠","♥","♦","♣"]
 let ranks=["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
 
@@ -21,15 +23,19 @@ deck.push({r,s})
 }
 
 deck.sort(()=>Math.random()-0.5)
+
 }
 
 function value(c){
+
 if(c.r=="A") return 11
 if(["K","Q","J"].includes(c.r)) return 10
 return parseInt(c.r)
+
 }
 
 function total(h){
+
 let t=0
 let aces=0
 
@@ -44,6 +50,7 @@ aces--
 }
 
 return t
+
 }
 
 function draw(){
@@ -58,22 +65,18 @@ player.map(c=>c.r+c.s).join(" ")
 if(active){
 document.getElementById("dealer").innerText=
 "?? " + dealer.slice(1).map(c=>c.r+c.s).join(" ")
+document.getElementById("dealerTotal").innerText="Total: ?"
 }
 else{
 document.getElementById("dealer").innerText=
 dealer.map(c=>c.r+c.s).join(" ")
+document.getElementById("dealerTotal").innerText="Total: "+total(dealer)
 }
 
 document.getElementById("playerTotal").innerText="Total: "+total(player)
 
-if(active){
-document.getElementById("dealerTotal").innerText="Total: ?"
-}
-else{
-document.getElementById("dealerTotal").innerText="Total: "+total(dealer)
-}
-
 update()
+
 }
 
 function start(){
@@ -98,10 +101,21 @@ active=true
 
 render()
 
+// Perfect 21 detection
 if(total(player)==21){
-document.getElementById("msg").innerText="Blackjack!"
-finish()
+
+document.getElementById("msg").innerText="Perfect 21!"
+
+points+=Math.floor(wager*1.5)
+
+active=false
+
+render()
+
+update()
+
 }
+
 }
 
 function hit(){
@@ -115,6 +129,7 @@ finish()
 }
 
 render()
+
 }
 
 function stand(){
@@ -126,7 +141,7 @@ dealer.push(draw())
 }
 
 finish()
-render()
+
 }
 
 function doublePlay(){
@@ -138,6 +153,7 @@ wager*=2
 player.push(draw())
 
 stand()
+
 }
 
 function finish(){
@@ -164,7 +180,9 @@ document.getElementById("msg").innerText="Tie"
 }
 
 render()
+
 update()
+
 }
 
 function add(){
