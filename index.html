@@ -67,7 +67,7 @@ deck.sort(()=>Math.random()-0.5)
 }
 
 function value(c){
-if(c.r=="A") return 11
+if(c.r==="A") return 11
 if(["K","Q","J"].includes(c.r)) return 10
 return parseInt(c.r)
 }
@@ -78,7 +78,7 @@ let aces=0
 
 for(let c of h){
 t+=value(c)
-if(c.r=="A") aces++
+if(c.r==="A") aces++
 }
 
 while(t>21 && aces>0){
@@ -96,14 +96,20 @@ function render(){
 document.getElementById("player").innerText=
 player.map(c=>c.r+c.s).join(" ")
 
+if(active){
+document.getElementById("dealer").innerText=
+"?? " + dealer[1].r + dealer[1].s
+document.getElementById("dealerTotal").innerText="Total: ?"
+}
+else{
 document.getElementById("dealer").innerText=
 dealer.map(c=>c.r+c.s).join(" ")
+document.getElementById("dealerTotal").innerText="Total: "+total(dealer)
+}
 
 document.getElementById("playerTotal").innerText="Total: "+total(player)
-document.getElementById("dealerTotal").innerText="Total: "+total(dealer)
 
 update()
-
 }
 
 function start(){
@@ -111,6 +117,16 @@ function start(){
 if(active) return
 
 wager=parseInt(document.getElementById("bet").value)
+
+if(isNaN(wager) || wager<=0){
+document.getElementById("msg").innerText="Enter valid points"
+return
+}
+
+if(wager>points){
+document.getElementById("msg").innerText="Not enough points"
+return
+}
 
 deckBuild()
 
@@ -121,6 +137,14 @@ active=true
 
 render()
 
+if(total(player)===21){
+document.getElementById("msg").innerText="Perfect 21!"
+points+=Math.floor(wager*1.5)
+active=false
+render()
+update()
+}
+
 }
 
 function hit(){
@@ -129,7 +153,9 @@ if(!active) return
 
 player.push(draw())
 
-if(total(player)>21) finish()
+if(total(player)>21){
+finish()
+}
 
 render()
 
@@ -144,7 +170,6 @@ dealer.push(draw())
 }
 
 finish()
-render()
 
 }
 
@@ -154,7 +179,6 @@ if(!active) return
 
 wager*=2
 player.push(draw())
-
 stand()
 
 }
@@ -168,22 +192,22 @@ let d=total(dealer)
 
 if(p>21){
 points-=wager
-msg.innerText="Bust"
+document.getElementById("msg").innerText="Bust"
 }
-else if(d>21||p>d){
+else if(d>21 || p>d){
 points+=wager
-msg.innerText="You win"
+document.getElementById("msg").innerText="You win"
 }
 else if(p<d){
 points-=wager
-msg.innerText="Dealer wins"
+document.getElementById("msg").innerText="Dealer wins"
 }
 else{
-msg.innerText="Tie"
+document.getElementById("msg").innerText="Tie"
 }
 
+render()
 update()
-
 }
 
 function add(){
