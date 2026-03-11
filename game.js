@@ -46,7 +46,9 @@ aces--
 return t
 }
 
-function draw(){return deck.pop()}
+function draw(){
+return deck.pop()
+}
 
 function render(){
 
@@ -54,15 +56,16 @@ document.getElementById("player").innerText=
 player.map(c=>c.r+c.s).join(" ")
 
 if(active){
-document.getElementById("dealer").innerText =
+document.getElementById("dealer").innerText=
 "?? " + dealer.slice(1).map(c=>c.r+c.s).join(" ")
 }
 else{
-document.getElementById("dealer").innerText =
+document.getElementById("dealer").innerText=
 dealer.map(c=>c.r+c.s).join(" ")
 }
 
 document.getElementById("playerTotal").innerText="Total: "+total(player)
+
 if(active){
 document.getElementById("dealerTotal").innerText="Total: ?"
 }
@@ -79,8 +82,10 @@ if(active) return
 
 wager=parseInt(document.getElementById("bet").value)
 
+if(isNaN(wager) || wager<=0) return
+
 if(wager>points){
-msg.innerText="Not enough points"
+document.getElementById("msg").innerText="Not enough points"
 return
 }
 
@@ -94,7 +99,7 @@ active=true
 render()
 
 if(total(player)==21){
-msg.innerText="Blackjack!"
+document.getElementById("msg").innerText="Blackjack!"
 finish()
 }
 }
@@ -105,7 +110,9 @@ if(!active) return
 
 player.push(draw())
 
-if(total(player)>21) finish()
+if(total(player)>21){
+finish()
+}
 
 render()
 }
@@ -127,6 +134,7 @@ function doublePlay(){
 if(!active) return
 
 wager*=2
+
 player.push(draw())
 
 stand()
@@ -141,20 +149,21 @@ let d=total(dealer)
 
 if(p>21){
 points-=wager
-msg.innerText="Bust"
+document.getElementById("msg").innerText="Bust"
 }
-else if(d>21||p>d){
+else if(d>21 || p>d){
 points+=wager
-msg.innerText="You win"
+document.getElementById("msg").innerText="You win"
 }
 else if(p<d){
 points-=wager
-msg.innerText="Dealer wins"
+document.getElementById("msg").innerText="Dealer wins"
 }
 else{
-msg.innerText="Tie"
+document.getElementById("msg").innerText="Tie"
 }
 
+render()
 update()
 }
 
