@@ -79,6 +79,11 @@ if(active) return
 
 wager=parseInt(document.getElementById("bet").value)
 
+if(wager>points){
+msg.innerText="Not enough points"
+return
+}
+
 deckBuild()
 
 player=[draw(),draw()]
@@ -87,6 +92,11 @@ dealer=[draw(),draw()]
 active=true
 
 render()
+
+if(total(player)==21){
+msg.innerText="Blackjack!"
+finish()
+}
 }
 
 function hit(){
