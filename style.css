@@ -1,5 +1,5 @@
 body{
-font-family:Arial, Helvetica, sans-serif;
+font-family:Arial;
 background:#0b5d2a;
 color:white;
 text-align:center;
@@ -10,20 +10,21 @@ h1{
 margin-top:20px;
 }
 
-#points{
-font-size:20px;
-font-weight:bold;
-margin:10px;
-}
-
 .cards{
 margin:15px;
 }
 
-.cards img{
-width:80px;
-margin:5px;
+.card{
+display:inline-block;
+width:60px;
+height:90px;
+background:white;
+color:black;
 border-radius:6px;
+margin:5px;
+font-weight:bold;
+font-size:18px;
+line-height:90px;
 box-shadow:0 4px 8px rgba(0,0,0,0.5);
 }
 
@@ -42,19 +43,20 @@ button:hover{
 background:#259a4f;
 }
 
-#dealerTotal,#playerTotal{
-font-size:18px;
-margin-bottom:10px;
+#chips button{
+background:#444;
+}
+
+#chips button:hover{
+background:#666;
 }
 
 #msg{
 font-size:20px;
-font-weight:bold;
 margin-top:15px;
+font-weight:bold;
 }
 
-hr{
-width:60%;
-margin:20px auto;
-border:1px solid rgba(255,255,255,0.3);
+#stats{
+margin-top:10px;
 }
