@@ -74,18 +74,41 @@ return deck.pop()
 
 function render(){
 
-document.getElementById("player").innerText=
-player.map(c=>c.r+c.s).join(" ")
+let playerHTML=""
+
+for(let c of player){
+playerHTML += "<img src='"+cardImage(c)+"'>"
+}
+
+document.getElementById("player").innerHTML=playerHTML
+
+let dealerHTML=""
 
 if(active){
-document.getElementById("dealer").innerText=
-"?? "+dealer[1].r+dealer[1].s
+
+dealerHTML += "<img src='https://deckofcardsapi.com/static/img/back.png'>"
+
+dealerHTML += "<img src='"+cardImage(dealer[1])+"'>"
+
 document.getElementById("dealerTotal").innerText="Total: ?"
+
 }
 else{
-document.getElementById("dealer").innerText=
-dealer.map(c=>c.r+c.s).join(" ")
+
+for(let c of dealer){
+dealerHTML += "<img src='"+cardImage(c)+"'>"
+}
+
 document.getElementById("dealerTotal").innerText="Total: "+total(dealer)
+
+}
+
+document.getElementById("dealer").innerHTML=dealerHTML
+
+document.getElementById("playerTotal").innerText="Total: "+total(player)
+
+update()
+
 }
 
 document.getElementById("playerTotal").innerText="Total: "+total(player)
