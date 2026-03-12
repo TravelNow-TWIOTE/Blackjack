@@ -1,27 +1,43 @@
 let points=1000
 let wager=0
+
 let deck=[]
 let player=[]
 let dealer=[]
+
 let active=false
-let shieldBet=0
 
-function cardImage(c){
+let rounds=0
+let wins=0
+let losses=0
 
-let suit=c.s
-let rank=c.r
+function update(){
 
-if(rank==="A") rank="A"
-if(rank==="J") rank="J"
-if(rank==="Q") rank="Q"
-if(rank==="K") rank="K"
+document.getElementById("points").innerText="Points: "+points
+document.getElementById("betDisplay").innerText=wager
 
-return "https://deckofcardsapi.com/static/img/"+rank+suit+".png"
+document.getElementById("rounds").innerText=rounds
+document.getElementById("wins").innerText=wins
+document.getElementById("losses").innerText=losses
 
 }
 
-function update(){
-document.getElementById("points").innerText="Points: "+points
+function disableButtons(v){
+
+document.getElementById("hitBtn").disabled=v
+document.getElementById("standBtn").disabled=v
+document.getElementById("doubleBtn").disabled=v
+
+}
+
+function setBet(x){
+
+wager+=x
+
+if(wager>points) wager=points
+
+update()
+
 }
 
 function deckBuild(){
@@ -49,19 +65,24 @@ return parseInt(c.r)
 
 }
 
-function total(h){
+function total(hand){
 
 let t=0
 let aces=0
 
-for(let c of h){
+for(let c of hand){
+
 t+=value(c)
+
 if(c.r==="A") aces++
+
 }
 
 while(t>21 && aces>0){
+
 t-=10
 aces--
+
 }
 
 return t
@@ -69,26 +90,30 @@ return t
 }
 
 function draw(){
+
 return deck.pop()
+
 }
 
 function render(){
 
-let playerHTML=""
+let pHTML=""
 
 for(let c of player){
-playerHTML += "<img src='"+cardImage(c)+"'>"
+
+pHTML+="<div class='card'>"+c.r+c.s+"</div>"
+
 }
 
-document.getElementById("player").innerHTML=playerHTML
+document.getElementById("player").innerHTML=pHTML
 
-let dealerHTML=""
+let dHTML=""
 
 if(active){
 
-dealerHTML += "<img src='https://deckofcardsapi.com/static/img/back.png'>"
+dHTML+="<div class='card'>?</div>"
 
-dealerHTML += "<img src='"+cardImage(dealer[1])+"'>"
+dHTML+="<div class='card'>"+dealer[1].r+dealer[1].s+"</div>"
 
 document.getElementById("dealerTotal").innerText="Total: ?"
 
@@ -96,20 +121,16 @@ document.getElementById("dealerTotal").innerText="Total: ?"
 else{
 
 for(let c of dealer){
-dealerHTML += "<img src='"+cardImage(c)+"'>"
+
+dHTML+="<div class='card'>"+c.r+c.s+"</div>"
+
 }
 
 document.getElementById("dealerTotal").innerText="Total: "+total(dealer)
 
 }
 
-document.getElementById("dealer").innerHTML=dealerHTML
-
-document.getElementById("playerTotal").innerText="Total: "+total(player)
-
-update()
-
-}
+document.getElementById("dealer").innerHTML=dHTML
 
 document.getElementById("playerTotal").innerText="Total: "+total(player)
 
@@ -121,16 +142,20 @@ function start(){
 
 if(active) return
 
-wager=parseInt(document.getElementById("bet").value)
+if(wager<=0){
 
-if(isNaN(wager)||wager<=0){
-document.getElementById("msg").innerText="Enter valid points"
+document.getElementById("msg").innerText="Choose bet"
+
 return
+
 }
 
 if(wager>points){
+
 document.getElementById("msg").innerText="Not enough points"
+
 return
+
 }
 
 deckBuild()
@@ -139,7 +164,10 @@ player=[draw(),draw()]
 dealer=[draw(),draw()]
 
 active=true
-shieldBet=0
+
+disableButtons(false)
+
+rounds++
 
 render()
 
@@ -152,7 +180,9 @@ if(!active) return
 player.push(draw())
 
 if(total(player)>21){
+
 finish()
+
 }
 
 render()
@@ -163,11 +193,17 @@ function stand(){
 
 if(!active) return
 
+setTimeout(()=>{
+
 while(total(dealer)<17){
+
 dealer.push(draw())
+
 }
 
 finish()
+
+},600)
 
 }
 
@@ -176,42 +212,10 @@ function doublePlay(){
 if(!active) return
 
 wager*=2
+
 player.push(draw())
 
 stand()
-
-}
-
-function split(){
-
-if(!active) return
-
-if(player.length!==2) return
-
-if(player[0].r!==player[1].r){
-document.getElementById("msg").innerText="Cannot split"
-return
-}
-
-player=[player[0],draw()]
-
-document.getElementById("msg").innerText="Split activated"
-
-render()
-
-}
-
-function shield(){
-
-if(!active) return
-
-shieldBet=Math.floor(wager/2)
-
-points-=shieldBet
-
-document.getElementById("msg").innerText="Shield active"
-
-update()
 
 }
 
@@ -219,33 +223,60 @@ function finish(){
 
 active=false
 
+disableButtons(true)
+
 let p=total(player)
 let d=total(dealer)
 
 if(p>21){
+
 points-=wager
+losses++
+
 document.getElementById("msg").innerText="Bust"
-}
-else if(d>21||p>d){
-points+=wager
-document.getElementById("msg").innerText="You win"
-}
-else if(p<d){
-points-=wager
-document.getElementById("msg").innerText="Dealer wins"
-}
-else{
-document.getElementById("msg").innerText="Tie"
+
 }
 
+else if(d>21||p>d){
+
+points+=wager
+wins++
+
+document.getElementById("msg").innerText="You win"
+
+}
+
+else if(p<d){
+
+points-=wager
+losses++
+
+document.getElementById("msg").innerText="Dealer wins"
+
+}
+
+else{
+
+document.getElementById("msg").innerText="Tie"
+
+}
+
+wager=0
+
 render()
+
 update()
 
 }
 
 function add(){
+
 points+=1000
+
 update()
+
 }
+
+disableButtons(true)
 
 update()
